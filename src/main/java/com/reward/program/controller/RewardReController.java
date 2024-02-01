@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/rewards")
+@RequestMapping("/api/v1/rewards")
 public class RewardReController {
 
 	@Autowired

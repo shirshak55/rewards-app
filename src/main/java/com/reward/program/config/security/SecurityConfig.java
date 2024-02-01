@@ -22,7 +22,7 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private static final String[] WHITE_LIST_URLS = {
-            "/api/auth/**",
+            "/api/v1/auth/**",
             "/h2-console/**"
     };
     @Bean

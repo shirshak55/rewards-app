@@ -53,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception ex) {
+            // Todo(shirshak55) Handle Gracefully
             throw new BadCredentialsException("Invalid Jwt Token");
         }
     }

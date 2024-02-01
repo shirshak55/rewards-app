@@ -1,7 +1,32 @@
-echo "Login into DB.....\n"
+echo "Register into DB.....\n"
+curl --location 'http://localhost:8080/api/v1/auth/signup' \
+--header 'Content-Type: application/json' \
+--header 'Accept: application/json' \
+--data-raw '{
+    "email":"shirshak55@gmail.com",
+    "password":"123456",
+    "username":"shirshak55"
+}'
+
+
+echo "\nLogin into DB.....\n"
+response=$(curl --location 'http://localhost:8080/api/v1/auth/login' \
+--header 'Content-Type: application/json' \
+--header 'Accept: application/json' \
+--data '{
+    "username":"shirshak55",
+    "password":"123456"
+}')
+
+TOKEN=$(echo "$response" | jq -r '.authenticationToken')
+echo $response
+# Print the token value to verify
+echo "Authentication Token: $TOKEN"
+
 
 echo "Adding customers to db.......\n"
-curl --location 'localhost:8081/customers' \
+curl --location 'localhost:8080/customers' \
+--header "Authorization: $TOKEN" \
 --header 'Content-Type: application/json' \
 --data '[
     {
@@ -21,11 +46,12 @@ curl --location 'localhost:8081/customers' \
 
 
 echo "\n getting all customers from db........\n"
-curl --location 'localhost:8081/customers'
+curl --location 'localhost:8080/customers'
 
 echo "\n Adding Purchase for customer  with id 1\n"
 
-curl --location 'localhost:8081/customers/1/purchases' \
+curl --location 'localhost:8080/customers/1/purchases' \
+--header "Authorization: $TOKEN" \
 --header 'Content-Type: application/json' \
 --data '[
     {
@@ -49,7 +75,8 @@ curl --location 'localhost:8081/customers/1/purchases' \
 
 echo "\n Adding Purchase for customer  with id 2...\n"
 
-curl --location 'localhost:8081/customers/2/purchases' \
+curl --location 'localhost:8080/customers/2/purchases' \
+--header "Authorization: $TOKEN" \
 --header 'Content-Type: application/json' \
 --data '[
     {
@@ -74,7 +101,8 @@ curl --location 'localhost:8081/customers/2/purchases' \
 
 echo "\n Adding Purchase for customer  with id 3...\n"
 
-curl --location 'localhost:8081/customers/3/purchases' \
+curl --location 'localhost:8080/customers/3/purchases' \
+--header "Authorization: $TOKEN" \
 --header 'Content-Type: application/json' \
 --data '[
     {
@@ -97,7 +125,8 @@ curl --location 'localhost:8081/customers/3/purchases' \
 
 echo "\n Adding Purchase for customer  with id 4...\n"
 
-curl --location 'localhost:8081/customers/4/purchases' \
+curl --location 'localhost:8080/customers/4/purchases' \
+--header "Authorization: $TOKEN" \
 --header 'Content-Type: application/json' \
 --data '[
     {
@@ -119,8 +148,8 @@ curl --location 'localhost:8081/customers/4/purchases' \
 ]'
 
 echo "\n Fetching reward for point for customer with id 1\n"
-curl --location 'localhost:8081/rewards?customerId=1'
+curl --header "Authorization: $TOKEN" --location 'localhost:8080/rewards?customerId=1'
 
 
 echo "\n Fetching reward all customers\n"
-curl --location 'localhost:8081/rewards'
+curl --header "Authorization: $TOKEN" --location 'localhost:8080/rewards'
