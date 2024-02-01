@@ -31,8 +31,7 @@ public class CustomerController {
 	public ResponseEntity<Customer> createPurchases(@PathVariable Long customerId,
 			@RequestBody List<Purchase> purchases) {
 		Optional<Customer> customer = this.customerRepository.findById(customerId);
-		if (customer.isPresent())
-			purchases.forEach(customer.get()::addToPurchases);
+        customer.ifPresent(value -> purchases.forEach(value::addToPurchases));
 
 		return new ResponseEntity<Customer>(this.customerRepository.save(customer.get()), HttpStatus.CREATED);
 	}

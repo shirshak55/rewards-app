@@ -4,6 +4,7 @@ import com.reward.program.config.security.JwtProvider;
 import com.reward.program.dto.AuthenticationResponse;
 import com.reward.program.dto.LoginRequest;
 import com.reward.program.dto.RegisterRequest;
+import com.reward.program.exceptions.BadRequestException;
 import com.reward.program.model.User;
 import com.reward.program.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +25,19 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     @Override
-    public void signUp(RegisterRequest registerRequest) {
-        User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreated(Instant.now());
-        user.setEnabled(true);
-        userRepository.save(user);
+    public void signUp(RegisterRequest registerRequest) throws BadRequestException {
+        if(userRepository.findUserByUsername(registerRequest.getUsername()).isEmpty()){
+            User user = new User();
+            user.setUsername(registerRequest.getUsername());
+            user.setEmail(registerRequest.getEmail());
+            user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+            user.setCreated(Instant.now());
+            user.setEnabled(true);
+            userRepository.save(user);
+        }else{
+            throw new BadRequestException("Username already Exists");
+        }
+
     }
 
     @Override

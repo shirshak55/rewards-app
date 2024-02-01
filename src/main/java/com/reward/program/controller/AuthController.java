@@ -3,6 +3,7 @@ package com.reward.program.controller;
 import com.reward.program.dto.AuthenticationResponse;
 import com.reward.program.dto.LoginRequest;
 import com.reward.program.dto.RegisterRequest;
+import com.reward.program.exceptions.BadRequestException;
 import com.reward.program.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -21,8 +22,12 @@ public class AuthController {
     @PostMapping("/signup")
     @SneakyThrows
     public ResponseEntity<Void> signup(@RequestBody RegisterRequest registerRequest) {
-        authService.signUp(registerRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        try {
+            authService.signUp(registerRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch(BadRequestException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest loginRequest) {
